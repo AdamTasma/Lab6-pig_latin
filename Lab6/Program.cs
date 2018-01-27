@@ -10,8 +10,8 @@ namespace Lab6
     {
         static void Main()
         {
+            Console.WriteLine("Welcome, to the pig latin translator");
             Console.WriteLine("Would you kindly enter a word");
-            Console.WriteLine("I will translate it into pig latin");
             string input = Console.ReadLine();
             input = input.ToLower();
             if (StartsAsVowel(input))
@@ -40,71 +40,30 @@ namespace Lab6
         {
             char[] letters = input.ToCharArray();
             char[] vowels = { 'a', 'e', 'i', 'o', 'u' };
-            for (int i = 0; letters[].length; i++)
+            int firstVowel = 0;
+            bool stop = false;
+            for (int i = 0; i < input.Length; i++)
             {
-                if (letters[i] == vowels[])
-                int firstVowel = i;
-
+                for (int j = 0; j < 5; j++)
+                {
+                    if (letters[i] == vowels[j])
+                    {
+                        firstVowel = i;
+                        Console.WriteLine("the first vowel is at index of " + i);
+                        stop = true;
+                    }
+                }
+                if (stop == true)
+                {
+                    break;
+                }
             }
-            string firstHalfOfWord = input.Substring(0,firstVowel);
+            string firstHalfOfWord = input.Substring(0, firstVowel);
             string secondHalfOfWord = input.Substring(firstVowel);
 
-            string wordway = firstHalfOfWord + secondHalfOfWord;
-            return wordway;
+            string ordway = secondHalfOfWord + firstHalfOfWord + "ay";
+            Console.WriteLine(ordway);
+            return ordway;
         }
-
-
-
-        //static void Main(string[] args)
-        //{
-        //    Console.WriteLine("Would you kindly type a word");
-        //    Console.WriteLine("I will translate it into pig latin");
-        //    string input = Console.ReadLine();
-
-        //    input = input.ToLower();
-
-        //    char[] letters = input.ToCharArray();
-        //    PrintCharArray(letters);
-
-        //    if (IsVowel(firstLetter))
-        //    {
-        //        input = input + "way";
-        //    }
-        //    else
-        //    {
-
-        //    }
-            
-        //}
-        //public static void PrintCharArray(string letters)
-        //{
-        //    foreach (letter in letters)
-        //    {
-        //        Console.WriteLine(letter);
-        //    }
-        //}
-        //public static bool IsVowel(char c)
-        //    {
-        //    char[] vowels = { 'a', 'e', 'i', 'o', 'u' };
-
-        //    foreach(char vowel in vowels)
-        //    {
-        //        if (c == vowels)
-        //        {
-        //            return true;
-        //        }
-        //    }
-        //    return false;
-        //}
-
     }
 }
-
-
-//convert to char array.ToLower
-//check first letter is a vowel
-//if yes {
-// put "way" on the end of the word}
-//else {
-// iterate until a vowel is found}
-//
