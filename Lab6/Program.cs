@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Text.RegularExpressions;
 
 namespace Lab6
 {
@@ -10,22 +11,62 @@ namespace Lab6
     {
         static void Main()
         {
+            bool hasPunctuation;
+            string punctuation;
+
             Console.WriteLine("Welcome, to the pig latin translator");
+            Console.WriteLine(Exceptions());
+
+        }
+
+        static string Exceptions()
+        {
             Console.WriteLine("Would you kindly enter a word");
-            string input = Console.ReadLine();
-            input = input.ToLower();
-            if (StartsAsVowel(input))
+            string word = Console.ReadLine();
+            //word = word.ToLower();
+            bool hasPunctuation;
+            string punctuation;
+
+            if ((word.EndsWith(".") || word.EndsWith(",")) || (word.EndsWith("!") || word.EndsWith("?")))
             {
-                Console.WriteLine(input + "way");
+                hasPunctuation = true;
+                punctuation = word.Substring(word.Length - 1);
+                word = word.Substring(0, word.Length - 1);
+                //Console.WriteLine("hasPunctuation = " + hasPunctuation);
+                //Console.WriteLine("punctuation = " + punctuation);
+                word = Regulars(word);
+                //runs Exceptions() again in case there are other special characters as well as having punctuation
+                //Exceptions(word);
+            }
+            //else if ((Regex.IsMatch(word, "[a-zA-Z ]\d{word.Length}+")))
+            else if (Regex.IsMatch(word, "[!@#$%^&*()<>*_+1234567890]+"))
+            {
+                Console.WriteLine("has special characters");
+                return word;
+            }
+            else 
+            {
+                word = Regulars(word);
+            }
+            return word;
+        }
+
+        static string Regulars(string word)
+        {
+            if (StartsAsVowel(word))
+            {
+                //Console.WriteLine(word + "way");
+                return (word + "way");
             }
             else
             {
-                TranslateWord(input);
+                return TranslateWord(word);
             }
         }
-        static bool StartsAsVowel(string input)
+
+        static bool StartsAsVowel(string word)
         {
-            char[] letters = input.ToCharArray();
+            char[] letters = word.ToCharArray();
             char[] vowels = { 'a', 'e', 'i', 'o', 'u' };
             foreach (char vowel in vowels)
             {
@@ -36,20 +77,21 @@ namespace Lab6
             }
             return false;
         }
-        public static string TranslateWord(string input)
+
+        public static string TranslateWord(string word)
         {
-            char[] letters = input.ToCharArray();
+            char[] letters = word.ToCharArray();
             char[] vowels = { 'a', 'e', 'i', 'o', 'u' };
             int firstVowel = 0;
             bool stop = false;
-            for (int i = 0; i < input.Length; i++)
+            for (int i = 0; i < word.Length; i++)
             {
                 for (int j = 0; j < 5; j++)
                 {
                     if (letters[i] == vowels[j])
                     {
                         firstVowel = i;
-                        Console.WriteLine("the first vowel is at index of " + i);
+                        //Console.WriteLine("the first vowel is at index of " + i);
                         stop = true;
                     }
                 }
@@ -58,12 +100,11 @@ namespace Lab6
                     break;
                 }
             }
-            string firstHalfOfWord = input.Substring(0, firstVowel);
-            string secondHalfOfWord = input.Substring(firstVowel);
+            string firstHalfOfWord = word.Substring(0, firstVowel);
+            string secondHalfOfWord = word.Substring(firstVowel);
 
-            string ordway = secondHalfOfWord + firstHalfOfWord + "ay";
-            Console.WriteLine(ordway);
-            return ordway;
+            word = secondHalfOfWord + firstHalfOfWord + "ay";
+            return word;
         }
     }
 }
