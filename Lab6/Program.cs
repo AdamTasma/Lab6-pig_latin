@@ -13,7 +13,6 @@ namespace Lab6
         {
             Console.WriteLine("Welcome, to the pig latin translator");
             SentenceSplit();
-            //Console.WriteLine(Exceptions());
         }
 
         static void SentenceSplit()
@@ -21,8 +20,6 @@ namespace Lab6
             Console.WriteLine("Would you kindly write a sentence to be translated");
             string input = Console.ReadLine();
             input = ActuallyEnteredInput(input);
-            //test
-            //Console.WriteLine("the input entered is " + input);
             string[] seperators = { " " };
             string[] sentence = input.Split(seperators, StringSplitOptions.RemoveEmptyEntries);
             string word;
@@ -30,58 +27,77 @@ namespace Lab6
             for (int i = 0; i < sentence.Length; i++)
             {
                 word = sentence[i];
-                word = Exceptions(word);
-                //test
-                //Console.WriteLine(word);
+                word = ExceptionsPunctuation(word);
                 sentence[i] = word;
-                //translatedSentence = translatedSentence.Concat(sentence[i]);
             }
-            //Console.WriteLine(sentence[1]);
             Console.WriteLine(string.Concat(sentence));
 
             Repeat();
         }
 
-        static string Exceptions(string word)
+        //static string ExceptionsCase(string word)
+        //{
+        //    bool isUpperCase;
+        //    char[] letters = word.ToCharArray();
+        //    if (char.IsUpper(letters[0]))
+        //    {
+        //        isUpperCase = true;
+        //    }
+        //    else
+        //    {
+        //        isUpperCase = false;
+        //    }
+        //}
+
+        static string ExceptionsPunctuation(string word)
         {
-            //word = word.ToLower();
-            ////bool hasPunctuation;
+            word = word.ToLower();
+            bool hasPunctuation;
             string punctuation;
 
             if ((word.EndsWith(".") || word.EndsWith(",")) || (word.EndsWith("!") || word.EndsWith("?")))
             {
-                ////hasPunctuation = true;
+                hasPunctuation = true;
                 punctuation = word.Substring(word.Length - 1);
                 word = word.Substring(0, word.Length - 1);
-                //test
-                //Console.WriteLine("hasPunctuation = " + hasPunctuation);
-                //Console.WriteLine("punctuation = " + punctuation);
-                word = Regulars(word);
-                //runs Exceptions() again in case there are other special characters as well as having punctuation
-                //Exceptions(word);
+                word = ExceptionsSpecialCharacters(word, hasPunctuation) + punctuation;
             }
-            else if (Regex.IsMatch(word, "[!@#$%^&*()<>*_+1234567890]+"))
+            else
             {
-                Console.WriteLine("has special characters");
+                word = ExceptionsSpecialCharacters(word, false);
+            }
+            return word;
+        }
+        static string ExceptionsSpecialCharacters(string word, bool hasPunctuation)
+        {
+            if (Regex.IsMatch(word, "[!@#$%^&*()<>*_+1234567890]+"))
+            {
+                //Console.WriteLine("has special characters");
                 return word;
             }
-            else 
+            else
             {
-                word = Regulars(word);
+                word = Regulars(word, hasPunctuation);
             }
             return word;
         }
 
-        static string Regulars(string word)
+        static string Regulars(string word, bool hasPunctuation)
         {
             if (StartsAsVowel(word))
             {
-                //Console.WriteLine(word + "way");
-                return (word + "way ");
+                if (hasPunctuation == true)
+                {
+                    return (word + "way");
+                }
+                else
+                {
+                    return (word + "way ");
+                }
             }
             else
             {
-                return TranslateWord(word);
+                return TranslateWord(word, hasPunctuation);
             }
         }
 
@@ -99,21 +115,7 @@ namespace Lab6
             return false;
         }
 
-        //static string CaseCheck(string word)
-        //{
-        //    bool isUpperCase;
-        //    char[] letters = word.ToCharArray();
-        //    if (char.IsUpper(letters[0]))
-        //    {
-        //        isUpperCase = true;
-        //    }
-        //    else
-        //    {
-        //        isUpperCase = false;
-        //    }
-        //}
-
-        static string TranslateWord(string word)
+        static string TranslateWord(string word, bool hasPunctuation)
         {
             char[] letters = word.ToCharArray();
             char[] vowels = { 'a', 'e', 'i', 'o', 'u', 'A', 'E', 'I', 'O', 'U' };
@@ -135,11 +137,21 @@ namespace Lab6
                     break;
                 }
             }
-            string firstHalfOfWord = word.Substring(0, firstVowel);
-            string secondHalfOfWord = word.Substring(firstVowel);
+            if (hasPunctuation == true)
+            {
+                string firstHalfOfWord = word.Substring(0, firstVowel);
+                string secondHalfOfWord = word.Substring(firstVowel);
+                word = secondHalfOfWord + firstHalfOfWord + "ay";
+                return word;
+            }
+            else
+            {
+                string firstHalfOfWord = word.Substring(0, firstVowel);
+                string secondHalfOfWord = word.Substring(firstVowel);
+                word = secondHalfOfWord + firstHalfOfWord + "ay ";
+                return word;
+            }
 
-            word = secondHalfOfWord + firstHalfOfWord + "ay ";
-            return word;
         }
         //repeat
         static void Repeat()
@@ -168,7 +180,7 @@ namespace Lab6
             {
                 Console.WriteLine("I didn't detect any input, would you kindly try again");
                 input = Console.ReadLine();
-                 input = ActuallyEnteredInput(input);
+                input = ActuallyEnteredInput(input);
             }
             return input;
         }
